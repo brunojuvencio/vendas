@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/relatorio_vendas_t9_v2.html"
+    }
+  ]
+}

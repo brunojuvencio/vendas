@@ -1,0 +1,14 @@
+.env
+.env.local
+.env.*.local
+
+.claude/
+.git/
+node_modules/
+
+*.mjs
+*.json
+!vercel.json
+*.pptx
+
+README.md

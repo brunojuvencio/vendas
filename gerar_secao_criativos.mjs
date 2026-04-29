@@ -10,17 +10,17 @@ const d    = JSON.parse(readFileSync("meta_criativos_hd.json", "utf8"));
 const html = readFileSync("relatorio_vendas_t9_v2.html", "utf8");
 
 const nomeAmigavel = {
-  "AD01vid_triade-performance":                                           "Tríade de Performance",
-  "AD01_vid_aprenda-o-conceito_25.03.2025":                              "Aprenda o Conceito (v1)",
-  "TESTE_video_inte_cargos-interesses-vendas_aprenda-o-conceito":        "Aprenda o Conceito — Interesses",
-  "AD01_vid_esse-curso-ja-formou_09.04.2025":                            "Esse Curso Já Formou",
-  "AD03_vid_aprenda-o-conceito":                                          "Aprenda o Conceito (v3)",
-  "AD02_inte_cargos_est_13.03.2025":                                     "Cargos e Interesses",
-  "AD03_est_turmaconfirmaa_11.04.2025":                                  "Turma Confirmada (v3)",
-  "AD01_est_turmaconfirmada_11.04.2025":                                 "Turma Confirmada (v1)",
-  "ad02_est_hum_28-01-2025_cn_vendas_fundace_teste-criativo":            "Humano — Jan/2025",
-  "ad01_est_hum_28-01-2025_cn_vendas_fundace_teste-criativo":            "Humano Alt — Jan/2025",
-  "ad03_est_hum_28-01-2025_cn_vendas_fundace_teste-criativoe_frio_meta_br_lead": "Humano v3 — Jan/2025",
+  "AD01vid_triade-performance":                                           "Vendas melhores nascem de método, dados e execução",
+  "AD01_vid_aprenda-o-conceito_25.03.2025":                              "Aprenda o conceito que transforma gestão comercial",
+  "TESTE_video_inte_cargos-interesses-vendas_aprenda-o-conceito":        "Para quem lidera vendas: menos achismo, mais performance",
+  "AD01_vid_esse-curso-ja-formou_09.04.2025":                            "Esse curso já formou líderes comerciais de alta performance",
+  "AD03_vid_aprenda-o-conceito":                                          "Gestão comercial com método, dados e execução",
+  "AD02_inte_cargos_est_13.03.2025":                                     "Seu cargo pede decisões comerciais mais estratégicas",
+  "AD03_est_turmaconfirmaa_11.04.2025":                                  "Turma confirmada para líderes que querem vender mais",
+  "AD01_est_turmaconfirmada_11.04.2025":                                 "Turma confirmada: próximo passo da sua carreira em vendas",
+  "ad02_est_hum_28-01-2025_cn_vendas_fundace_teste-criativo":            "Venda com método, liderança e inteligência comercial",
+  "ad01_est_hum_28-01-2025_cn_vendas_fundace_teste-criativo":            "Você está pronto para liderar vendas com mais método?",
+  "ad03_est_hum_28-01-2025_cn_vendas_fundace_teste-criativoe_frio_meta_br_lead": "Da rotina comercial à liderança de performance",
 };
 
 const ctaLabel = { "APPLY_NOW": "Inscreva-se", "LEARN_MORE": "Saiba Mais", "SIGN_UP": "Cadastre-se" };
@@ -132,13 +132,13 @@ const imagemCards = [
 
 const secao = `  <!-- ═══ 07 — MELHORES CRIATIVOS ══════════════════════════════════════ -->
   <section>
-    <div class="section-label">07 · Criativos — Visualização</div>
+    <div class="section-label">07 · Melhores criativos — Headlines recomendadas</div>
 
     <!-- META VÍDEOS -->
     <div style="margin-bottom:32px;">
       <div class="criativo-secao-titulo">
         <span class="tag" style="background:var(--meta-blue);">META ADS</span>
-        Vídeos 9:16 — clique para assistir
+        Vídeos 9:16 — melhores headlines
       </div>
       <div class="meta-video-list">${videoRows}
       </div>
@@ -148,7 +148,7 @@ const secao = `  <!-- ═══ 07 — MELHORES CRIATIVOS ═══════�
     <div style="margin-bottom:32px;">
       <div class="criativo-secao-titulo">
         <span class="tag" style="background:var(--meta-blue);">META ADS</span>
-        Imagens estáticas 1:1
+        Imagens 1:1 — melhores headlines
       </div>
       <div class="criativo-media-grid grid-images">${imagemCards}
       </div>

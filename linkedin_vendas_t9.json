@@ -1,0 +1,15 @@
+{
+  "campaigns": [],
+  "analytics": {
+    "status": 403,
+    "serviceErrorCode": 100,
+    "code": "ACCESS_DENIED",
+    "message": "Unpermitted fields present in PARAMETER: Data Processing Exception while processing fields [/dateRange.start.day, /dateRange.start.month, /dateRange.end.year, /dateRange.end.day, /dateRange.start.year, /accounts[0], /dateRange.end.month]"
+  },
+  "monthly": {
+    "status": 403,
+    "serviceErrorCode": 100,
+    "code": "ACCESS_DENIED",
+    "message": "Unpermitted fields present in PARAMETER: Data Processing Exception while processing fields [/dateRange.start.day, /dateRange.start.month, /dateRange.end.year, /dateRange.end.day, /dateRange.start.year, /accounts[0], /dateRange.end.month]"
+  }
+}

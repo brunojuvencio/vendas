@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBA Gestão em Vendas T9 — Análise de Campanha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --amarelo: #FEB737;
+    --amarelo-dk: #D4960A;
+    --preto: #000000;
+    --branco: #FFFFFF;
+    --cinza-bg: #0D0D0D;
+    --cinza-card: #161616;
+    --cinza-borda: #2A2A2A;
+    --cinza-md: #222222;
+    --cinza-txt: #888888;
+    --meta-blue: #1877F2;
+    --google-blue: #4285F4;
+    --linkedin-blue: #0077B5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cinza-bg);
+    color: var(--branco);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--preto);
+    border-bottom: 3px solid var(--amarelo);
+    padding: 0;
+  }
+
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .header-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .brand-top {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--amarelo);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .header-title {
+    font-weight: 600;
+    font-size: 34px;
+    color: var(--branco);
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+  }
+
+  .header-title span { color: var(--amarelo); }
+
+  .header-meta {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .header-meta .periodo {
+    font-size: 13px;
+    color: var(--cinza-txt);
+    font-weight: 500;
+  }
+
+  .header-meta .badge {
+    display: inline-block;
+    background: var(--amarelo);
+    color: var(--preto);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    align-self: flex-end;
+  }
+
+  /* ── LAYOUT ── */
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--amarelo);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--cinza-borda);
+  }
+
+  /* ── CARDS GRID ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--cinza-card);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 8px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--amarelo);
+  }
+
+  .card.accent::before  { background: var(--meta-blue); }
+  .card.accent-g::before { background: var(--google-blue); }
+  .card.accent-li::before { background: var(--linkedin-blue); }
+
+  .card-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--cinza-txt);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .card-value {
+    font-weight: 600;
+    font-size: 28px;
+    color: var(--amarelo);
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+
+  .card-value.white { color: var(--branco); }
+
+  .card-sub {
+    font-size: 11px;
+    color: var(--cinza-txt);
+    font-weight: 400;
+  }
+
+  /* ── CANAL BLOCKS ── */
+  .canais-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .canal-block {
+    background: var(--cinza-card);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .canal-header {
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--cinza-borda);
+  }
+
+  .canal-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .canal-icon.meta   { background: var(--meta-blue);     color: #fff; }
+  .canal-icon.google { background: var(--google-blue);   color: #fff; }
+  .canal-icon.li     { background: var(--linkedin-blue); color: #fff; }
+
+  .canal-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--branco);
+  }
+
+  .canal-type {
+    font-size: 10px;
+    color: var(--cinza-txt);
+    font-weight: 500;
+  }
+
+  .canal-body {
+    padding: 20px 22px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .canal-stat-label {
+    font-size: 10px;
+    color: var(--cinza-txt);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+  .canal-stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--branco);
+  }
+  .canal-stat-value.hi { color: var(--amarelo); }
+
+  /* ── TABLES ── */
+  .table-wrap {
+    background: var(--cinza-card);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead th {
+    background: #111;
+    padding: 12px 18px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amarelo);
+    text-align: left;
+    border-bottom: 2px solid var(--amarelo);
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--cinza-borda);
+    transition: background 0.15s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(254,183,55,0.04); }
+
+  tbody td {
+    padding: 13px 18px;
+    font-size: 13px;
+    color: var(--branco);
+    vertical-align: middle;
+  }
+
+  .td-label { font-weight: 600; }
+  .td-val   { font-weight: 700; color: var(--amarelo); font-variant-numeric: tabular-nums; }
+  .td-sub   { font-size: 11px; color: var(--cinza-txt); }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pill-meta   { background: rgba(24,119,242,0.18);  color: var(--meta-blue); }
+  .pill-google { background: rgba(66,133,244,0.18);  color: var(--google-blue); }
+  .pill-li     { background: rgba(0,119,181,0.18);   color: var(--linkedin-blue); }
+  .pill-org    { background: rgba(254,183,55,0.18);  color: var(--amarelo); }
+
+  /* ── FUNIL ── */
+  .funil-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px 0;
+  }
+
+  .funil-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 0;
+  }
+
+  .funil-bar-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  .funil-bar {
+    height: 68px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    transition: all 0.3s;
+  }
+
+  .funil-bar-label {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+
+  .funil-bar-num {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+
+  .funil-bar-pct {
+    font-size: 11px;
+    font-weight: 600;
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+
+  .funil-stats {
+    min-width: 160px;
+    text-align: left;
+  }
+
+  .funil-stats-label {
+    font-size: 10px;
+    color: var(--cinza-txt);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+
+  .funil-stats-val {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--amarelo);
+    letter-spacing: -0.5px;
+  }
+
+  .funil-stats-sub {
+    font-size: 11px;
+    color: var(--cinza-txt);
+    margin-top: 2px;
+  }
+
+  .funil-arrow {
+    text-align: center;
+    padding: 6px 0;
+    font-size: 11px;
+    color: var(--cinza-txt);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .funil-arrow::before,
+  .funil-arrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--cinza-borda);
+  }
+
+  /* ── META VÍDEO LISTA (vertical + métricas) ── */
+  .meta-video-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .meta-video-row {
+    display: flex;
+    background: var(--cinza-card);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 10px;
+    overflow: hidden;
+    height: 260px;
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+
+  .meta-video-row:hover { border-color: var(--amarelo); }
+
+  .meta-video-thumb-col {
+    width: 146px;
+    flex-shrink: 0;
+    position: relative;
+    background: #080808;
+    overflow: hidden;
+  }
+
+  .meta-video-thumb-col .thumb-bg {
+    position: absolute;
+    inset: 0;
+    width: 115%;
+    height: 115%;
+    top: -7.5%;
+    left: -7.5%;
+    object-fit: cover;
+    filter: blur(12px) brightness(0.32) saturate(0.7);
+    z-index: 0;
+  }
+
+  .meta-video-thumb-col .thumb-fg {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    z-index: 1;
+  }
+
+  .meta-video-play {
+    position: absolute;
+    bottom: 10px; right: 10px;
+    width: 34px; height: 34px;
+    background: rgba(254,183,55,0.9);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: #000;
+  }
+
+  .meta-video-badge {
+    position: absolute;
+    top: 8px; left: 8px;
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    font-size: 8px; font-weight: 700;
+    padding: 2px 6px; border-radius: 3px;
+    letter-spacing: 0.08em;
+    border-left: 2px solid var(--amarelo);
+  }
+
+  .meta-video-metrics-col {
+    flex: 1;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .meta-video-nome {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--branco);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .meta-video-camp {
+    font-size: 11px;
+    color: var(--cinza-txt);
+    margin-bottom: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .meta-metric-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .meta-metric-item {}
+  .meta-metric-label {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--cinza-txt);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 3px;
+  }
+  .meta-metric-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--amarelo);
+    letter-spacing: -0.3px;
+  }
+  .meta-metric-value.neutral { color: var(--branco); font-size: 13px; }
+
+  .meta-video-assistir {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(254,183,55,0.1);
+    border: 1px solid rgba(254,183,55,0.3);
+    color: var(--amarelo);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 5px;
+    align-self: flex-start;
+    pointer-events: none;
+  }
+
+  /* ── GOOGLE YOUTUBE GRID ── */
+  .google-video-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .google-slot-card {
+    background: var(--cinza-card);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .google-yt-wrap {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: #080808;
+  }
+
+  .google-yt-wrap iframe {
+    width: 100%; height: 100%;
+    border: none;
+    display: block;
+  }
+
+  .google-yt-placeholder {
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #333;
+  }
+
+  .google-yt-placeholder input {
+    background: #111;
+    border: 1px solid var(--cinza-borda);
+    border-radius: 4px;
+    color: var(--branco);
+    font-size: 11px;
+    padding: 5px 10px;
+    width: 85%;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .google-yt-placeholder input:focus { border-color: var(--amarelo); }
+
+  .google-yt-placeholder button {
+    background: var(--amarelo);
+    color: var(--preto);
+    border: none;
+    border-radius: 4px;
+    padding: 5px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .google-slot-info {
+    padding: 10px 14px 12px;
+  }
+
+  .google-slot-nome {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--branco);
+    margin-bottom: 3px;
+  }
+
+  .google-slot-meta {
+    font-size: 10px;
+    color: var(--cinza-txt);
+  }
+
+  /* ── CRIATIVOS MEDIA GRID ── */
+  .criativo-media-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  /* 5 vídeos em portrait: 5 colunas lado a lado */
+  .criativo-media-grid.grid-videos {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  /* imagens quadradas: 3 colunas */
+  .criativo-media-grid.grid-images {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Google slots */
+  .criativo-media-grid.grid-google {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .media-card {
+    background: var(--cinza-card);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+
+  .media-card:hover {
+    border-color: var(--amarelo);
+    transform: translateY(-2px);
+  }
+
+  .media-thumb {
+    position: relative;
+    background: #111;
+    overflow: hidden;
+  }
+
+  .media-thumb.v-story  { aspect-ratio: 9/16; }
+  .media-thumb.v-square { aspect-ratio: 1/1; }
+
+  .media-thumb img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .play-btn {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px; height: 44px;
+    background: rgba(254,183,55,0.92);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; color: #000;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    transition: transform 0.15s;
+  }
+
+  .media-card:hover .play-btn { transform: translate(-50%, -50%) scale(1.1); }
+
+  .media-badge {
+    position: absolute;
+    top: 8px; left: 8px;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .media-badge.video { border-left: 2px solid var(--amarelo); }
+  .media-badge.imagem { border-left: 2px solid #aaa; }
+  .media-badge.google { border-left: 2px solid var(--google-blue); }
+
+  .media-info {
+    padding: 10px 12px 12px;
+  }
+
+  .media-nome {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--branco);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .media-meta {
+    font-size: 10px;
+    color: var(--cinza-txt);
+  }
+
+  .media-camp {
+    font-size: 10px;
+    color: var(--cinza-txt);
+    margin-bottom: 8px;
+  }
+
+  .img-metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 10px;
+    margin-top: 8px;
+  }
+
+  .img-metric-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--cinza-txt);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .img-metric-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--amarelo);
+    line-height: 1.2;
+  }
+
+  .img-metric-value.neutral { color: var(--branco); }
+
+  /* placeholder sem thumb */
+  .media-placeholder {
+    aspect-ratio: 9/16;
+    background: #111;
+    border: 2px dashed var(--cinza-borda);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--cinza-txt);
+    font-size: 12px;
+    cursor: default;
+  }
+
+  .media-placeholder input {
+    background: #1a1a1a;
+    border: 1px solid var(--cinza-borda);
+    border-radius: 4px;
+    color: var(--branco);
+    font-size: 11px;
+    padding: 4px 8px;
+    width: 85%;
+    outline: none;
+  }
+
+  .media-placeholder input:focus { border-color: var(--amarelo); }
+
+  .media-placeholder button {
+    background: var(--amarelo);
+    color: var(--preto);
+    border: none;
+    border-radius: 4px;
+    padding: 4px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal-box {
+    background: var(--cinza-card);
+    border: 1px solid var(--amarelo);
+    border-radius: 12px;
+    padding: 22px 24px 24px;
+    max-width: 620px;
+    width: 92%;
+    position: relative;
+    max-height: 96vh;
+    overflow-y: auto;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 12px; right: 14px;
+    font-size: 20px;
+    color: var(--cinza-txt);
+    cursor: pointer;
+    background: none;
+    border: none;
+    line-height: 1;
+  }
+
+  .modal-close:hover { color: var(--amarelo); }
+
+  .modal-canal {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--amarelo);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .modal-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--branco);
+    margin-bottom: 14px;
+    padding-right: 24px;
+  }
+
+  .modal-video-wrap {
+    background: #000;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .modal-video-wrap iframe {
+    display: block;
+    width: 100%;
+    border: none;
+  }
+
+  .modal-fallback {
+    padding: 28px;
+    text-align: center;
+    color: var(--cinza-txt);
+    font-size: 13px;
+  }
+
+  .modal-fallback a {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--amarelo);
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid var(--amarelo);
+    padding: 8px 20px;
+    border-radius: 6px;
+  }
+
+  .modal-fallback a:hover { background: rgba(254,183,55,0.1); }
+
+  .criativo-secao-titulo {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .criativo-secao-titulo .tag {
+    padding: 2px 9px;
+    border-radius: 3px;
+    font-size: 10px;
+    color: #fff;
+  }
+
+  /* ── CHARTS ── */
+  .chart-box {
+    background: var(--cinza-card);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 10px;
+    padding: 28px 28px 20px;
+  }
+
+  .chart-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--branco);
+    margin-bottom: 4px;
+  }
+
+  .chart-sub {
+    font-size: 11px;
+    color: var(--cinza-txt);
+    margin-bottom: 20px;
+  }
+
+  .matriculas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  /* ── BARRA INVESTIMENTO ── */
+  .inv-bar-wrap  { display: flex; flex-direction: column; gap: 10px; }
+  .inv-bar-row   { display: flex; align-items: center; gap: 12px; }
+  .inv-bar-label { width: 120px; font-size: 12px; font-weight: 600; color: var(--branco); flex-shrink: 0; }
+  .inv-bar-track { flex: 1; height: 28px; background: #1a1a1a; border-radius: 4px; overflow: hidden; }
+  .inv-bar-fill  { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 10px; font-size: 11px; font-weight: 700; color: #fff; white-space: nowrap; }
+  .inv-bar-pct   { width: 50px; text-align: right; font-size: 12px; font-weight: 700; color: var(--cinza-txt); }
+
+  /* ── AVISO ── */
+  .aviso {
+    background: rgba(254,183,55,0.06);
+    border: 1px solid rgba(254,183,55,0.25);
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 11px;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .aviso span { color: var(--amarelo); font-weight: 700; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--preto);
+    border-top: 1px solid var(--cinza-borda);
+    margin-top: 60px;
+    padding: 28px 40px;
+  }
+
+  .footer-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-brand {
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--amarelo);
+    letter-spacing: 0.06em;
+  }
+
+  .footer-info { font-size: 11px; color: var(--cinza-txt); text-align: right; }
+
+  @media (max-width: 900px) {
+    .cards-grid, .canais-grid { grid-template-columns: 1fr 1fr; }
+    .matriculas-grid { grid-template-columns: 1fr; }
+    main { padding: 24px 20px; }
+    .header-inner { flex-direction: column; align-items: flex-start; }
+    .header-meta  { text-align: left; }
+    .criativo-metrics { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══════════════════════════════════════════════════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="brand-top">Fundace · FEA-RP / USP</div>
+      <h1 class="header-title">MBA Gestão em <span>Vendas</span><br>Turma 9 — Presencial</h1>
+    </div>
+    <div class="header-meta">
+      <div class="periodo">Análise de Campanha de Mídia Paga</div>
+      <div class="periodo">Jun/2024 – Mai/2025</div>
+      <div class="periodo" style="margin-top:4px;">Fontes: Google Ads · Meta Ads · LinkedIn Ads · Ploomes CRM</div>
+      <div class="badge" style="margin-top:8px;">Relatório Interno</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ═══ 01 — VISÃO GERAL ══════════════════════════════════════════════ -->
+  <section>
+    <div class="section-label">01 · Visão Geral</div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-label">Investimento Total</div>
+        <div class="card-value">R$ 44.229</div>
+        <div class="card-sub">Meta + Google + LinkedIn</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Leads Gerados</div>
+        <div class="card-value">2.058</div>
+        <div class="card-sub">1.993 CRM + 65 LinkedIn msg</div>
+      </div>
+      <div class="card">
+        <div class="card-label">CPL Médio</div>
+        <div class="card-value">R$ 21,49</div>
+        <div class="card-sub">Investimento ÷ total de leads</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Matrículas</div>
+        <div class="card-value">27</div>
+        <div class="card-sub">Registros confirmados</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Inscrições</div>
+        <div class="card-value">217</div>
+        <div class="card-sub">10,5% dos leads</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Taxa Inscrição → Matrícula</div>
+        <div class="card-value">12,4%</div>
+        <div class="card-sub">27 ÷ 217 inscrições</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Custo por Matrícula</div>
+        <div class="card-value">R$ 1.638</div>
+        <div class="card-sub">R$ 44.229 ÷ 27 matrículas</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Taxa Lead → Matrícula</div>
+        <div class="card-value white" style="font-size:24px;">1,31%</div>
+        <div class="card-sub">27 ÷ 2.058 leads totais</div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div style="font-size:10px;font-weight:700;color:var(--cinza-txt);letter-spacing:.14em;text-transform:uppercase;margin-bottom:14px;">Distribuição do Investimento</div>
+      <div class="inv-bar-wrap">
+        <div class="inv-bar-row">
+          <div class="inv-bar-label">Meta Ads</div>
+          <div class="inv-bar-track">
+            <div class="inv-bar-fill" style="width:72%;background:var(--meta-blue);">R$ 31.855</div>
+          </div>
+          <div class="inv-bar-pct">72%</div>
+        </div>
+        <div class="inv-bar-row">
+          <div class="inv-bar-label">Google Ads</div>
+          <div class="inv-bar-track">
+            <div class="inv-bar-fill" style="width:25%;background:var(--google-blue);">R$ 10.997</div>
+          </div>
+          <div class="inv-bar-pct">25%</div>
+        </div>
+        <div class="inv-bar-row">
+          <div class="inv-bar-label">LinkedIn Ads</div>
+          <div class="inv-bar-track">
+            <div class="inv-bar-fill" style="width:3%;background:var(--linkedin-blue);min-width:80px;">R$ 1.377</div>
+          </div>
+          <div class="inv-bar-pct">3%</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 02 — PERFORMANCE POR CANAL ══════════════════════════════════ -->
+  <section>
+    <div class="section-label">02 · Performance por Canal</div>
+    <div class="canais-grid">
+
+      <div class="canal-block">
+        <div class="canal-header">
+          <div class="canal-icon meta">f</div>
+          <div>
+            <div class="canal-name">Meta Ads</div>
+            <div class="canal-type">Facebook · Instagram · Leads + Conversão</div>
+          </div>
+        </div>
+        <div class="canal-body">
+          <div class="canal-stat">
+            <div class="canal-stat-label">Investimento</div>
+            <div class="canal-stat-value hi">R$ 31.855</div>
+          </div>
+          <div class="canal-stat">
+            <div class="canal-stat-label">Leads (CRM)</div>
+            <div class="canal-stat-value">~1.993</div>
+          </div>
+          <div class="canal-stat">
+            <div class="canal-stat-label">CPL</div>
+            <div class="canal-stat-value hi">R$ 15,99</div>
+          </div>
+          <div class="canal-stat">
+            <div class="canal-stat-label">Matrículas</div>
+            <div class="canal-stat-value">9 (33%)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="canal-block">
+        <div class="canal-header">
+          <div class="canal-icon google">G</div>
+          <div>
+            <div class="canal-name">Google Ads</div>
+            <div class="canal-type">Search · Display · Performance Max</div>
+          </div>
+        </div>
+        <div class="canal-body">
+          <div class="canal-stat">
+            <div class="canal-stat-label">Investimento</div>
+            <div class="canal-stat-value hi">R$ 10.997</div>
+          </div>
+          <div class="canal-stat">
+            <div class="canal-stat-label">Conversões</div>
+            <div class="canal-stat-value">40</div>
+          </div>
+          <div class="canal-stat">
+            <div class="canal-stat-label">CPL</div>
+            <div class="canal-stat-value" style="color:#f87;">R$ 274,93</div>
+          </div>
+          <div class="canal-stat">
+            <div class="canal-stat-label">Impressões est.</div>
+            <div class="canal-stat-value">~185k</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="canal-block">
+        <div class="canal-header">
+          <div class="canal-icon li">in</div>
+          <div>
+            <div class="canal-name">LinkedIn Ads</div>
+            <div class="canal-type">Message Campaigns · InMail</div>
+          </div>
+        </div>
+        <div class="canal-body">
+          <div class="canal-stat">
+            <div class="canal-stat-label">Investimento</div>
+            <div class="canal-stat-value hi">R$ 1.377</div>
+          </div>
+          <div class="canal-stat">
+            <div class="canal-stat-label">Leads</div>
+            <div class="canal-stat-value">65</div>
+          </div>
+          <div class="canal-stat">
+            <div class="canal-stat-label">CPL</div>
+            <div class="canal-stat-value hi">R$ 21,19</div>
+          </div>
+          <div class="canal-stat">
+            <div class="canal-stat-label">Formato</div>
+            <div class="canal-stat-value" style="font-size:13px;">Mensagem</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div style="margin-top:20px;" class="aviso">
+      <span>💡</span> CPL Meta (R$15,99) e LinkedIn (R$21,19) são eficientes. Google (R$274,93) é 13–17× mais caro por lead.
+    </div>
+  </section>
+
+  <!-- ═══ 03 — EVOLUÇÃO MENSAL ══════════════════════════════════════════ -->
+  <section>
+    <div class="section-label">03 · Evolução Mensal de Leads</div>
+    <div class="chart-box">
+      <div class="chart-title">Leads gerados no Ploomes CRM — VENDAS T9 por mês</div>
+      <div class="chart-sub">Fonte: Ploomes CRM · filtro: título contém "VENDAS", exclui "ESTVEND" · total: 1.993 leads</div>
+      <canvas id="chartMensal" height="90"></canvas>
+    </div>
+  </section>
+
+  <!-- ═══ 04 — ORIGEM DAS MATRÍCULAS ══════════════════════════════════ -->
+  <section>
+    <div class="section-label">04 · Origem das 27 Matrículas</div>
+    <div class="matriculas-grid">
+      <div class="chart-box">
+        <div class="chart-title">Distribuição por Canal de Origem</div>
+        <div class="chart-sub">27 matrículas confirmadas — análise de UTM e origem registrada</div>
+        <canvas id="chartOrigens" height="200"></canvas>
+      </div>
+      <div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Canal</th>
+                <th>Matrículas</th>
+                <th>%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="pill pill-org">Site / Orgânico</span></td>
+                <td class="td-val">17</td>
+                <td class="td-val">63%</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-meta">Meta Ads CN</span></td>
+                <td class="td-val">9</td>
+                <td class="td-val">33%</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-li">AKM / Direto</span></td>
+                <td class="td-val">1</td>
+                <td class="td-val">4%</td>
+              </tr>
+              <tr style="background:#111;">
+                <td style="font-weight:600;">Total</td>
+                <td class="td-val">27</td>
+                <td class="td-val">100%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="aviso" style="margin-top:12px;">
+          <span>⚠</span> 63% das matrículas sem mídia paga rastreável. GA4 + UTMs consistentes são prioridade para T10.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 05 — FUNIL DE CONVERSÃO ══════════════════════════════════════ -->
+  <section>
+    <div class="section-label">05 · Funil de Conversão</div>
+    <div class="chart-box">
+      <div class="chart-title">Leads → Inscrições → Matrículas</div>
+      <div class="chart-sub">Dados reais CRM Ploomes + registros de matrícula</div>
+
+      <div class="funil-container" style="margin-top:24px;">
+
+        <!-- LEADS -->
+        <div class="funil-row">
+          <div class="funil-bar-wrap">
+            <div class="funil-bar" style="width:100%;background:#1a2a3a;border:1px solid #2a3a4a;">
+              <div>
+                <div class="funil-bar-label" style="color:#aaa;">Leads Gerados</div>
+                <div class="funil-bar-pct" style="color:#555;">base — 100%</div>
+              </div>
+              <div class="funil-bar-num" style="color:var(--meta-blue);">2.058</div>
+            </div>
+          </div>
+          <div class="funil-stats">
+            <div class="funil-stats-label">Total de leads</div>
+            <div class="funil-stats-val">2.058</div>
+            <div class="funil-stats-sub">1.993 CRM + 65 LinkedIn</div>
+          </div>
+        </div>
+
+        <div class="funil-arrow">▼ 10,5% dos leads se inscreveram</div>
+
+        <!-- INSCRIÇÕES -->
+        <div class="funil-row">
+          <div class="funil-bar-wrap">
+            <div class="funil-bar" style="width:70%;background:#2a2200;border:1px solid #3a3200;">
+              <div>
+                <div class="funil-bar-label" style="color:var(--amarelo-dk);">Inscrições</div>
+                <div class="funil-bar-pct" style="color:#6a5200;">10,5% dos leads</div>
+              </div>
+              <div class="funil-bar-num" style="color:var(--amarelo-dk);">217</div>
+            </div>
+          </div>
+          <div class="funil-stats">
+            <div class="funil-stats-label">Conversão</div>
+            <div class="funil-stats-val">10,5%</div>
+            <div class="funil-stats-sub">217 ÷ 2.058 leads</div>
+          </div>
+        </div>
+
+        <div class="funil-arrow">▼ 12,4% das inscrições se matricularam</div>
+
+        <!-- MATRÍCULAS -->
+        <div class="funil-row">
+          <div class="funil-bar-wrap">
+            <div class="funil-bar" style="width:38%;background:var(--amarelo);border:none;">
+              <div>
+                <div class="funil-bar-label" style="color:var(--preto);">Matrículas</div>
+                <div class="funil-bar-pct" style="color:#7a5a00;">12,4% das inscrições · 1,31% dos leads</div>
+              </div>
+              <div class="funil-bar-num" style="color:var(--preto);">27</div>
+            </div>
+          </div>
+          <div class="funil-stats">
+            <div class="funil-stats-label">Conversão final</div>
+            <div class="funil-stats-val">12,4%</div>
+            <div class="funil-stats-sub">27 ÷ 217 inscrições</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 06 — KEYWORDS + CRIATIVOS ════════════════════════════════════ -->
+  <section>
+    <div class="section-label">06 · Google Ads — Palavras-chave</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Palavra-chave</th>
+            <th>Investimento</th>
+            <th>Conversões</th>
+            <th>CPL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label">mba gestão em vendas</td>
+            <td class="td-val">R$ 2.180</td>
+            <td>10</td>
+            <td class="td-val">R$ 218,00</td>
+          </tr>
+          <tr>
+            <td class="td-label">mba vendas fea usp</td>
+            <td class="td-val">R$ 1.620</td>
+            <td>7</td>
+            <td class="td-val">R$ 231,43</td>
+          </tr>
+          <tr>
+            <td class="td-label">pós-graduação vendas presencial</td>
+            <td class="td-val">R$ 1.340</td>
+            <td>6</td>
+            <td class="td-val">R$ 223,33</td>
+          </tr>
+          <tr>
+            <td class="td-label">curso vendas ribeirão preto</td>
+            <td class="td-val">R$ 980</td>
+            <td>4</td>
+            <td class="td-val">R$ 245,00</td>
+          </tr>
+          <tr>
+            <td class="td-label">mba comercial executivo</td>
+            <td class="td-val">R$ 870</td>
+            <td>3</td>
+            <td class="td-val">R$ 290,00</td>
+          </tr>
+          <tr>
+            <td style="color:var(--cinza-txt);font-style:italic;">+ outras ~65 keywords</td>
+            <td class="td-val">R$ 4.007</td>
+            <td>10</td>
+            <td class="td-val">R$ 400,70</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ 07 — MELHORES CRIATIVOS ══════════════════════════════════════ -->
+  <section>
+    <div class="section-label">07 · Criativos — Visualização</div>
+
+    <!-- META VÍDEOS -->
+    <div style="margin-bottom:32px;">
+      <div class="criativo-secao-titulo">
+        <span class="tag" style="background:var(--meta-blue);">META ADS</span>
+        Vídeos 9:16 — clique para assistir
+      </div>
+      <div class="meta-video-list">
+        <div class="meta-video-row" onclick="openModal('Tríade de Performance','https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F1402100856708521%2Fvideos%2F1118213410064239&width=560&show_text=false','https://www.facebook.com/1402100856708521/videos/1118213410064239')">
+          <div class="meta-video-thumb-col">
+            <img class="thumb-bg" src="https://scontent.faqa1-1.fna.fbcdn.net/v/t15.5256-10/489376912_1118213433397570_6125550664585136633_n.jpg?_nc_cat=110&ccb=1-7&_nc_eui2=AeE5d9kRdfVKHOaRF2wkYfTmlIAAAp3dgGOUgAACnd2AY0pYDh2iGHT7SjOSMHRxr4RvvkUCkkaxhqc6vfdkibOK&_nc_ohc=RWPLFxPnEsYQ7kNvwEkNrwW&_nc_oc=Adqf33Xxtyy-_opQSbqtb7IL_I9o1Bz01vB0yaM0oaBJrkan2RlbUIgBeIxGuVQuNHs&_nc_zt=23&_nc_ht=scontent.faqa1-1.fna&edm=AAT1rw8EAAAA&_nc_gid=YpkMOeQrpqrgj2pgtcq5wg&_nc_tpa=Q5bMBQEgYgj0NJ4akNqsIgl4-6dFuj0qzHa7kr8OR5ENnpNMaaSKwXBjMKlBViKociPToWZ6oZRt33r8mw&stp=c0.5000x0.5000f_dst-emg0_p560x315_q75_tt6&ur=a7ce7f&_nc_sid=58080a&oh=00_Af0OhRfXyfkE6Ezx3ziUuRxkKQ2IOAqIKA3R7XwmBvrDSA&oe=69F7EF7D" alt="" aria-hidden="true" onerror="this.style.display='none'">
+            <img class="thumb-fg" src="https://scontent.faqa1-1.fna.fbcdn.net/v/t15.5256-10/489376912_1118213433397570_6125550664585136633_n.jpg?_nc_cat=110&ccb=1-7&_nc_eui2=AeE5d9kRdfVKHOaRF2wkYfTmlIAAAp3dgGOUgAACnd2AY0pYDh2iGHT7SjOSMHRxr4RvvkUCkkaxhqc6vfdkibOK&_nc_ohc=RWPLFxPnEsYQ7kNvwEkNrwW&_nc_oc=Adqf33Xxtyy-_opQSbqtb7IL_I9o1Bz01vB0yaM0oaBJrkan2RlbUIgBeIxGuVQuNHs&_nc_zt=23&_nc_ht=scontent.faqa1-1.fna&edm=AAT1rw8EAAAA&_nc_gid=YpkMOeQrpqrgj2pgtcq5wg&_nc_tpa=Q5bMBQEgYgj0NJ4akNqsIgl4-6dFuj0qzHa7kr8OR5ENnpNMaaSKwXBjMKlBViKociPToWZ6oZRt33r8mw&stp=c0.5000x0.5000f_dst-emg0_p560x315_q75_tt6&ur=a7ce7f&_nc_sid=58080a&oh=00_Af0OhRfXyfkE6Ezx3ziUuRxkKQ2IOAqIKA3R7XwmBvrDSA&oe=69F7EF7D" alt="Tríade de Performance" loading="lazy" onerror="handleThumbError(this)">
+            <div class="meta-video-badge">9:16</div>
+            <div class="meta-video-play">▶</div>
+          </div>
+          <div class="meta-video-metrics-col">
+            <div class="meta-video-nome">Tríade de Performance</div>
+            <div class="meta-video-camp">vendas_fundace_frio_leads_Teste_vide</div>
+            <div class="meta-metric-row">
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">Leads est.</div>
+                <div class="meta-metric-value">~410</div>
+              </div>
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">CPL est.</div>
+                <div class="meta-metric-value">R$ 12,40</div>
+              </div>
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">CTA</div>
+                <div class="meta-metric-value neutral">Inscreva-se</div>
+              </div>
+            </div>
+            <div class="meta-metric-row">
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">Formato</div>
+                <div class="meta-metric-value neutral">Vídeo · Stories</div>
+              </div>
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">Status</div>
+                <div class="meta-metric-value neutral">Pausado</div>
+              </div>
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">Canal</div>
+                <div class="meta-metric-value neutral">Meta Ads</div>
+              </div>
+            </div>
+            <div class="meta-video-assistir">▶&nbsp; Clique para assistir</div>
+          </div>
+        </div>
+        <div class="meta-video-row" onclick="openModal('Aprenda o Conceito (v1)','https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F1402100856708521%2Fvideos%2F1403600737670092&width=560&show_text=false','https://www.facebook.com/1402100856708521/videos/1403600737670092')">
+          <div class="meta-video-thumb-col">
+            <img class="thumb-bg" src="https://scontent.faqa1-1.fna.fbcdn.net/v/t15.5256-10/489503872_1403600777670088_9033201905021776092_n.jpg?_nc_cat=106&ccb=1-7&_nc_eui2=AeHJC2wZZLt4LhvPSZZ3YyZGlatY_x5mFXaVq1j_HmYVducMlKidyLnL1DtuAxS1b3uZuOm3ZLxohg0umMCQX8vC&_nc_ohc=YItzsJ8ey6cQ7kNvwHCk-Ey&_nc_oc=AdpNCVaKuKtpQH9IU7emkpzDsoezDzlezLIZJlztwgBmVCiaGeluER6UpsS4pXcjUCY&_nc_zt=23&_nc_ht=scontent.faqa1-1.fna&edm=AAT1rw8EAAAA&_nc_gid=unDoBrSrlto9ZYX1xU_BRQ&_nc_tpa=Q5bMBQFERb_pSlz07FV98pRT7cUTOJLGilQcCMlGM5Z7FUTR4XJCBTvJI0FvkdjbPLvNAgTq_xCmcFa8MA&stp=c0.5000x0.5000f_dst-emg0_p560x315_q75_tt6&ur=a7ce7f&_nc_sid=58080a&oh=00_Af38Q1G3r89tmcWk7_R3Bvq1MnTK1MclmKJ3YV-tWnQTJA&oe=69F7E77D" alt="" aria-hidden="true" onerror="this.style.display='none'">
+            <img class="thumb-fg" src="https://scontent.faqa1-1.fna.fbcdn.net/v/t15.5256-10/489503872_1403600777670088_9033201905021776092_n.jpg?_nc_cat=106&ccb=1-7&_nc_eui2=AeHJC2wZZLt4LhvPSZZ3YyZGlatY_x5mFXaVq1j_HmYVducMlKidyLnL1DtuAxS1b3uZuOm3ZLxohg0umMCQX8vC&_nc_ohc=YItzsJ8ey6cQ7kNvwHCk-Ey&_nc_oc=AdpNCVaKuKtpQH9IU7emkpzDsoezDzlezLIZJlztwgBmVCiaGeluER6UpsS4pXcjUCY&_nc_zt=23&_nc_ht=scontent.faqa1-1.fna&edm=AAT1rw8EAAAA&_nc_gid=unDoBrSrlto9ZYX1xU_BRQ&_nc_tpa=Q5bMBQFERb_pSlz07FV98pRT7cUTOJLGilQcCMlGM5Z7FUTR4XJCBTvJI0FvkdjbPLvNAgTq_xCmcFa8MA&stp=c0.5000x0.5000f_dst-emg0_p560x315_q75_tt6&ur=a7ce7f&_nc_sid=58080a&oh=00_Af38Q1G3r89tmcWk7_R3Bvq1MnTK1MclmKJ3YV-tWnQTJA&oe=69F7E77D" alt="Aprenda o Conceito (v1)" loading="lazy" onerror="handleThumbError(this)">
+            <div class="meta-video-badge">9:16</div>
+            <div class="meta-video-play">▶</div>
+          </div>
+          <div class="meta-video-metrics-col">
+            <div class="meta-video-nome">Aprenda o Conceito (v1)</div>
+            <div class="meta-video-camp">vendas_fundace_frio_leads_Teste_vide</div>
+            <div class="meta-metric-row">
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">Leads est.</div>
+                <div class="meta-metric-value">~310</div>
+              </div>
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">CPL est.</div>
+                <div class="meta-metric-value">R$ 13,80</div>
+              </div>
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">CTA</div>
+                <div class="meta-metric-value neutral">Inscreva-se</div>
+              </div>
+            </div>
+            <div class="meta-metric-row">
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">Formato</div>
+                <div class="meta-metric-value neutral">Vídeo · Feed</div>
+              </div>
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">Status</div>
+                <div class="meta-metric-value neutral">Pausado</div>
+              </div>
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">Canal</div>
+                <div class="meta-metric-value neutral">Meta Ads</div>
+              </div>
+            </div>
+            <div class="meta-video-assistir">▶&nbsp; Clique para assistir</div>
+          </div>
+        </div>
+        <div class="meta-video-row" onclick="openModal('Aprenda o Conceito — Interesses','https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F1402100856708521%2Fvideos%2F9453055918103869&width=560&show_text=false','https://www.facebook.com/1402100856708521/videos/9453055918103869')">
+          <div class="meta-video-thumb-col">
+            <img class="thumb-bg" src="https://scontent.faqa1-1.fna.fbcdn.net/v/t15.5256-10/489608855_9453056041437190_7232863116944744194_n.jpg?_nc_cat=111&ccb=1-7&_nc_eui2=AeFjpybMi9TpNMAm28ZgkH7lVQA85VTLoH5VADzlVMugfhZhoaBwwCzgxJyGoruNAQ8M-Zxg0HY-GsPo0h06IMWv&_nc_ohc=w6TVee_e6HQQ7kNvwH-UjTf&_nc_oc=AdpHES4vp4wP36C2VoXyZ0iwOlGsxoL1JEAHLO5khlCc0Z6BhHG4E3O07_P6OEqDNLQ&_nc_zt=23&_nc_ht=scontent.faqa1-1.fna&edm=AAT1rw8EAAAA&_nc_gid=nUiuO9jHVMJ57NXIJGNZmw&_nc_tpa=Q5bMBQHAJfJ7RrFXhdev7nwx3W7RMlvMXWbYK0cNHvBGchkIrBJJKK3zed9Gai7XXLm0Il8moeSfp3rtkg&stp=c0.5000x0.5000f_dst-emg0_p560x315_q75_tt6&ur=a7ce7f&_nc_sid=58080a&oh=00_Af3l8f9mswY3el_FstAdwtJN0KgP0qMnOr116PX7XO8HKg&oe=69F80DD6" alt="" aria-hidden="true" onerror="this.style.display='none'">
+            <img class="thumb-fg" src="https://scontent.faqa1-1.fna.fbcdn.net/v/t15.5256-10/489608855_9453056041437190_7232863116944744194_n.jpg?_nc_cat=111&ccb=1-7&_nc_eui2=AeFjpybMi9TpNMAm28ZgkH7lVQA85VTLoH5VADzlVMugfhZhoaBwwCzgxJyGoruNAQ8M-Zxg0HY-GsPo0h06IMWv&_nc_ohc=w6TVee_e6HQQ7kNvwH-UjTf&_nc_oc=AdpHES4vp4wP36C2VoXyZ0iwOlGsxoL1JEAHLO5khlCc0Z6BhHG4E3O07_P6OEqDNLQ&_nc_zt=23&_nc_ht=scontent.faqa1-1.fna&edm=AAT1rw8EAAAA&_nc_gid=nUiuO9jHVMJ57NXIJGNZmw&_nc_tpa=Q5bMBQHAJfJ7RrFXhdev7nwx3W7RMlvMXWbYK0cNHvBGchkIrBJJKK3zed9Gai7XXLm0Il8moeSfp3rtkg&stp=c0.5000x0.5000f_dst-emg0_p560x315_q75_tt6&ur=a7ce7f&_nc_sid=58080a&oh=00_Af3l8f9mswY3el_FstAdwtJN0KgP0qMnOr116PX7XO8HKg&oe=69F80DD6" alt="Aprenda o Conceito — Interesses" loading="lazy" onerror="handleThumbError(this)">
+            <div class="meta-video-badge">9:16</div>
+            <div class="meta-video-play">▶</div>
+          </div>
+          <div class="meta-video-metrics-col">
+            <div class="meta-video-nome">Aprenda o Conceito — Interesses</div>
+            <div class="meta-video-camp">vendas_fundace_frio_leads_Teste_vide</div>
+            <div class="meta-metric-row">
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">Leads est.</div>
+                <div class="meta-metric-value">~240</div>
+              </div>
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">CPL est.</div>
+                <div class="meta-metric-value">R$ 15,20</div>
+              </div>
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">CTA</div>
+                <div class="meta-metric-value neutral">Saiba Mais</div>
+              </div>
+            </div>
+            <div class="meta-metric-row">
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">Formato</div>
+                <div class="meta-metric-value neutral">Vídeo · Feed</div>
+              </div>
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">Status</div>
+                <div class="meta-metric-value neutral">Pausado</div>
+              </div>
+              <div class="meta-metric-item">
+                <div class="meta-metric-label">Canal</div>
+                <div class="meta-metric-value neutral">Meta Ads</div>
+              </div>
+            </div>
+            <div class="meta-video-assistir">▶&nbsp; Clique para assistir</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- META IMAGENS -->
+    <div style="margin-bottom:32px;">
+      <div class="criativo-secao-titulo">
+        <span class="tag" style="background:var(--meta-blue);">META ADS</span>
+        Imagens estáticas 1:1
+      </div>
+      <div class="criativo-media-grid grid-images">
+        <div class="media-card" style="cursor:default;">
+          <div class="media-thumb v-square">
+            <img src="imagens/cargos.jpg" alt="Cargos e Interesses" loading="lazy" onerror="handleThumbError(this)">
+            <div class="media-badge imagem">Imagem</div>
+          </div>
+          <div class="media-info">
+            <div class="media-nome">Cargos e Interesses</div>
+          </div>
+        </div>
+        <div class="media-card" style="cursor:default;">
+          <div class="media-thumb v-square">
+            <img src="imagens/turma.jpg" alt="Turma Confirmada (v3)" loading="lazy" onerror="handleThumbError(this)">
+            <div class="media-badge imagem">Imagem</div>
+          </div>
+          <div class="media-info">
+            <div class="media-nome">Turma Confirmada (v3)</div>
+          </div>
+        </div>
+        <div class="media-card" style="cursor:default;">
+          <div class="media-thumb v-square">
+            <img src="imagens/humanos.jpg" alt="Humano — Jan/2025" loading="lazy" onerror="handleThumbError(this)">
+            <div class="media-badge imagem">Imagem</div>
+          </div>
+          <div class="media-info">
+            <div class="media-nome">Humano — Jan/2025</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ═══ MODAL DE VÍDEO ════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="videoModal" onclick="closeModalIfBg(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-canal" id="modalCanal"></div>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-video-wrap" id="modalVideoWrap"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">FUNDACE</div>
+    <div class="footer-info">
+      FEA-RP / USP · fundace.org.br<br>
+      MBA Gestão em Vendas T9 · Análise Jun/2024–Mai/2025 · Uso interno
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Chart: Evolução Mensal ────────────────────────────────────────────────
+const meses = ['Jun/24','Jul/24','Ago/24','Set/24','Out/24','Nov/24','Dez/24','Jan/25','Fev/25','Mar/25','Abr/25','Mai/25'];
+const leadsData = [155, 310, 289, 198, 143, 53, 76, 112, 178, 245, 168, 66];
+const maxV = Math.max(...leadsData);
+
+new Chart(document.getElementById('chartMensal'), {
+  type: 'bar',
+  data: {
+    labels: meses,
+    datasets: [{
+      label: 'Leads',
+      data: leadsData,
+      backgroundColor: leadsData.map(v => v === maxV ? '#FEB737' : v < 100 ? '#2a2a2a' : '#1877F2'),
+      borderRadius: 4,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#111',
+        borderColor: '#FEB737',
+        borderWidth: 1,
+        titleColor: '#FEB737',
+        bodyColor: '#fff',
+        callbacks: { label: ctx => ` ${ctx.parsed.y} leads` }
+      }
+    },
+    scales: {
+      x: { grid: { color: '#1a1a1a' }, ticks: { color: '#888', font: { size: 11 } } },
+      y: { grid: { color: '#1a1a1a' }, ticks: { color: '#888', font: { size: 11 } }, beginAtZero: true }
+    }
+  }
+});
+
+// ── Fallback thumbnail ───────────────────────────────────────────────────
+function handleThumbError(img) {
+  img.onerror = null;
+  img.style.display = 'none';
+  const wrap = img.parentElement;
+  wrap.style.background = '#111';
+  wrap.insertAdjacentHTML('afterbegin',
+    '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#333;gap:6px">' +
+    '<span style="font-size:32px">🎬</span>' +
+    '<span style="font-size:10px;color:#444">Prévia indisponível</span>' +
+    '</div>'
+  );
+}
+
+// ── Modal Facebook ───────────────────────────────────────────────────────
+function openModal(title, embedUrl, fallbackUrl) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalCanal').textContent = 'META ADS · Facebook';
+  // Portrait popup for 9:16 Stories video
+  const box = document.querySelector('#videoModal .modal-box');
+  box.style.maxWidth = '360px';
+  const portraitUrl = embedUrl.replace('width=560', 'width=320');
+  const wrap = document.getElementById('modalVideoWrap');
+  wrap.innerHTML = `<iframe src="${portraitUrl}" style="width:320px;height:620px;" scrolling="no" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+    <div style="text-align:center;padding:8px 0 0;font-size:10px;color:#555;">
+      Se não carregar: <a href="${fallbackUrl}" target="_blank" style="color:var(--amarelo);text-decoration:none;">abrir no Facebook ↗</a>
+    </div>`;
+  document.getElementById('videoModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('videoModal').classList.remove('active');
+  document.getElementById('modalVideoWrap').innerHTML = '';
+  document.querySelector('#videoModal .modal-box').style.maxWidth = '';
+  document.body.style.overflow = '';
+}
+
+function closeModalIfBg(e) {
+  if (e.target === document.getElementById('videoModal')) closeModal();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── Google Ads vídeo embed ────────────────────────────────────────────────
+function getYouTubeId(url) {
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+function embedGoogle(n) {
+  const url = document.getElementById(`gUrl${n}`).value.trim();
+  const ytId = getYouTubeId(url);
+  const card  = document.getElementById(`gCard${n}`);
+  const placeholder = document.getElementById(`gPlaceholder${n}`);
+  const info  = document.getElementById(`gInfo${n}`);
+  const nome  = document.getElementById(`gNome${n}`);
+
+  if (!ytId) { alert('URL inválida. Use um link do YouTube (youtube.com/watch?v=... ou youtu.be/...)'); return; }
+
+  placeholder.innerHTML = `
+    <div style="position:relative;aspect-ratio:9/16;width:100%;cursor:pointer;" onclick="openGoogleModal('${ytId}')">
+      <img src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg" style="width:100%;height:100%;object-fit:cover;opacity:0.85;" alt="thumbnail">
+      <div class="play-btn" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">▶</div>
+      <div class="media-badge google">YouTube</div>
+    </div>
+  `;
+  placeholder.style.border = 'none';
+  placeholder.style.background = 'transparent';
+
+  nome.textContent = `Vídeo Google Ads ${n}`;
+  info.style.display = 'block';
+}
+
+function openGoogleModal(ytId) {
+  document.getElementById('modalTitle').textContent = 'Google Ads — Vídeo YouTube';
+  document.getElementById('modalCanal').textContent = 'GOOGLE ADS · YouTube';
+  // Landscape popup for 16:9 YouTube
+  const box = document.querySelector('#videoModal .modal-box');
+  box.style.maxWidth = '640px';
+  const wrap = document.getElementById('modalVideoWrap');
+  wrap.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" style="width:100%;height:360px;" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
+  document.getElementById('videoModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+// ── Chart: Origem Matrículas ──────────────────────────────────────────────
+new Chart(document.getElementById('chartOrigens'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Site / Orgânico (17)', 'Meta Ads CN (9)', 'AKM / Direto (1)'],
+    datasets: [{
+      data: [17, 9, 1],
+      backgroundColor: ['#FEB737', '#1877F2', '#0077B5'],
+      borderColor: '#0D0D0D',
+      borderWidth: 3,
+      hoverOffset: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    cutout: '68%',
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color: '#aaa', font: { size: 11 }, padding: 16, boxWidth: 12 }
+      },
+      tooltip: {
+        backgroundColor: '#111',
+        borderColor: '#FEB737',
+        borderWidth: 1,
+        titleColor: '#FEB737',
+        bodyColor: '#fff',
+        callbacks: { label: ctx => ` ${ctx.label}: ${Math.round(ctx.parsed / 27 * 100)}%` }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
